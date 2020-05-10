@@ -1,6 +1,5 @@
 aux_source_directory(. PROJECT_SRC)
 
-# 设置运行库为静态多线程调试
 if(MSVC)     
     # Use the static C library for all build types
     foreach(var 
@@ -12,10 +11,19 @@ if(MSVC)
       if(${var} MATCHES "/MD")
         string(REGEX REPLACE "/MD" "/MT" ${var} "${${var}}")
       endif()
-    endforeach()    
+    endforeach()
+
+    # lib
+    link_directories(${PROJECT_SOURCE_DIR}/thirdparty/gtest/lib)
+else(UNIX)
+
+  link_directories(${PROJECT_SOURCE_DIR}/thirdparty/gtest/a)
+  link_libraries(libgtest.a)
+  link_libraries(libgtest_main.a)
+
 endif(MSVC)
 
+# include
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty/gtest/include)
-link_directories(${PROJECT_SOURCE_DIR}/thirdparty/gtest/lib)
 
 add_executable(gtest_demo ${PROJECT_SRC})
